@@ -7,5 +7,6 @@ export const orthographyCheckUseCase = async (options: Options) => {
 
   return {
     prompt: prompt,
+    apiKay: process.env.OPEN_API_KEY,
   };
 };
