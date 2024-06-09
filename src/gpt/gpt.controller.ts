@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { GptService } from './gpt.service';
 import { OrthographyDto, ProsConsDiscusserDto } from './dto';
 
@@ -14,5 +15,22 @@ export class GptController {
   @Post('pros-cons-discusser')
   prosConsDicusser(@Body() prosConsDto: ProsConsDiscusserDto) {
     return this.gptService.prosConsDiscusser(prosConsDto);
+  }
+
+  @Post('pros-cons-discusser-stream')
+  async prosConsDicusserStream(
+    @Body() prosConsDto: ProsConsDiscusserDto,
+    @Res() res: Response,
+  ) {
+    const stream = await this.gptService.prosConsDiscusserStream(prosConsDto);
+
+    res.setHeader('Content-Type', 'application/json');
+    res.status(HttpStatus.OK);
+
+    for await (const chunk of stream) {
+      const piece = chunk.choices[0].delta.content || '';
+      res.write(piece);
+    }
+    res.end();
   }
 }
