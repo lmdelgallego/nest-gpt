@@ -36,7 +36,10 @@ export const orthographyCheckUseCase = async (
     model: 'gpt-4o',
     temperature: 0.3,
     max_tokens: 100,
+    response_format: {
+      type: 'json_object',
+    },
   });
-  // console.log(completion.choices[0].message.content);
-  return JSON.parse(completion.choices[0].message.content);
+  const jsonResp = JSON.parse(completion.choices[0].message.content);
+  return jsonResp;
 };
