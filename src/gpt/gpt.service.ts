@@ -3,9 +3,16 @@ import {
   orthographyCheckUseCase,
   prosConsDiscusserStreamUseCase,
   prosConsDiscusserUseCase,
+  textToAudioGetterUseCase,
+  textToAudioUseCase,
   translateUseCase,
 } from './use-cases';
-import { OrthographyDto, ProsConsDiscusserDto, TranslateDto } from './dto';
+import {
+  OrthographyDto,
+  ProsConsDiscusserDto,
+  TextToAudioDto,
+  TranslateDto,
+} from './dto';
 import OpenAI from 'openai';
 
 @Injectable()
@@ -38,5 +45,16 @@ export class GptService {
       prompt: translateDto.prompt,
       lang: translateDto.lang,
     });
+  }
+
+  async textToAudio(textToAudioDto: TextToAudioDto) {
+    return await textToAudioUseCase(this.openAi, {
+      prompt: textToAudioDto.prompt,
+      voice: textToAudioDto.voice,
+    });
+  }
+
+  async getTextToAudio(id: string) {
+    return await textToAudioGetterUseCase(id);
   }
 }
