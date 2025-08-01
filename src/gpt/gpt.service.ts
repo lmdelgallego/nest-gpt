@@ -14,6 +14,8 @@ import {
   TranslateDto,
 } from './dto';
 import OpenAI from 'openai';
+import { audioToTextUseCase } from './use-cases/audio-to-text.use-case';
+import { AudioToTextDto } from './dto/audio-to-text';
 
 @Injectable()
 export class GptService {
@@ -56,5 +58,16 @@ export class GptService {
 
   async getTextToAudio(id: string) {
     return await textToAudioGetterUseCase(id);
+  }
+
+  async audioToText(
+    audioFile: Express.Multer.File,
+    audioToTextDto?: AudioToTextDto,
+  ) {
+    const { prompt } = audioToTextDto;
+    return await audioToTextUseCase(this.openAi, {
+      audioFile,
+      prompt,
+    });
   }
 }
